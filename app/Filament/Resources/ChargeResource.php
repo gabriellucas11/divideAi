@@ -54,18 +54,14 @@ class ChargeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                Tables\Columns\TextColumn::make('users.email')
                     ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_by')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('chargedId.email')
-                    ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                ->label('Cobrados'),
                 Tables\Columns\TextColumn::make('value')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                ->label('Valor'),
                 Tables\Columns\IconColumn::make('full_paid')
                     ->boolean()
                     ->label('Completamente pago'),
