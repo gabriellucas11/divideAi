@@ -26,22 +26,27 @@ class ChargeResource extends Resource
                 Forms\Components\Select::make('users')
                     ->relationship(name: 'users', titleAttribute: 'name')
                     ->searchable()
-                ->multiple()
-                    ->preload(),
-               
+                    ->multiple()
+                    ->preload()
+                    ->visibleOn('create'),
+
+                Toggle::make('paid_charge')
+                    ->onColor('success')
+                    ->visibleOn('edit')
+                    ->offColor('danger')
+                    ->hidden(fn ($record) => !$record?->users()->where('user_id', auth()->user()->id)->first()?->exists())
+                    ->label('Pago'),
+
+                Toggle::make('paid_owner')
+                    ->onColor('success')
+                    ->visibleOn('edit')
+                    ->offColor('danger')
+                    ->hidden(fn ($record) => auth()->user()->id != $record?->created_by)
+                    ->label('Pago pelo criador'),
+
                 Forms\Components\TextInput::make('value')
                     ->required()
                     ->numeric() -> label('valor'),
-
-                    Toggle::make('paid_owner')
-                        ->onColor('success')
-                        ->visibleOn('edit')
-                        ->offColor('danger')->hidden(fn ($record) => $record?->users()->where('user_id', auth()->user()->id)->first()->exists()),
-
-                        Toggle::make('paid')
-                        ->onColor('success')
-                        ->visibleOn('edit')
-                        ->offColor('danger')->hidden(fn ($record) => auth()->user()->id == $record?->created_by),
             ]);
     }
 
@@ -62,9 +67,11 @@ class ChargeResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\IconColumn::make('full_paid')
-                    ->boolean(),
+                    ->boolean()
+                    ->label('Completamente pago'),
                 Tables\Columns\IconColumn::make('paid_owner')
-                    ->boolean(),
+                    ->boolean()
+                    ->label('Pago pelo criador'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

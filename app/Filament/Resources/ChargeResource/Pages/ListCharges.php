@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ChargeResource\Pages;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Resources\Components\Tab;
 use App\Filament\Resources\ChargeResource;
@@ -21,7 +22,7 @@ class ListCharges extends ListRecords
     public function getTabs(): array
     {
         return [
-            
+
             'Cobranças' => Tab::make()
                 ->modifyQueryUsing(fn (Builder $query) => $this->searchCobrancas($query)),
             'Dividas' => Tab::make()
@@ -29,15 +30,16 @@ class ListCharges extends ListRecords
         ];
     }
 
-   
+
 
     private function searchCobrancas(Builder $query): Builder {
-        return $query-> where('created_by',auth()->user()->id);
-        
+        return $query->where('created_by',auth()->user()->id);
+
     }
 
     private function searchDividas(Builder $query): Builder {
-        return $query->join('table_users_chargeds', 'charges.id', '=', 'table_users_chargeds.charge_id')
-        ->where('table_users_chargeds.user_id', '=', auth()->user()->id);
+        return  $query->whereHas('users', function ($query)  {
+            $query->where('table_users_chargeds.user_id', '=', auth()->user()->id);
+        });
     }
 }
