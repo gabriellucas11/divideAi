@@ -23,7 +23,7 @@ class Charge extends Model
         'paid' => 'boolean',
     ];
 
-    
+
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
@@ -43,8 +43,15 @@ class Charge extends Model
 
     public function  getFullPaidAttribute(): bool
     {
-       $chardPaid = $this->users()->count('paid') == 0;
-       
+       $chardPaid = $this->users()->wherePivot('paid', false)->count() == 0;
+
        return $chardPaid && $this->paid_owner;
+    }
+
+    public function  getPaidChargeAttribute(): bool
+    {
+        $userCharge = $this->users()->where('user_id', auth()->user()->id)->first();
+
+        return $userCharge?->pivot->paid ?? false;
     }
 }

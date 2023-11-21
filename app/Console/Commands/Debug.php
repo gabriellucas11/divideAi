@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Models\Charge;
+use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Auth;
 
 class Debug extends Command
 {
@@ -26,7 +28,11 @@ class Debug extends Command
      */
     public function handle()
     {
+        $user = User::find(3);
+        Auth::login($user);
+
         $charge = Charge::first();
-        dd($charge->full_paid);
+
+        dd($charge->paid_charge);
     }
 }
