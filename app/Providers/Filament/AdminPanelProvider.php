@@ -27,6 +27,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->registration()
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -53,6 +54,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])->brandLogo(asset('https://s3-alpha-sig.figma.com/img/4b0d/9306/d845793a66f73ea7e14dcce218872dec?Expires=1701043200&Signature=XVOS3KjQedQy9WYS4d3bkHSM9VRTHOn1VgYOjfQ5gA2Z6zbhpQs6F0M9PAmP2Yr1hH1t2YgcuCpbBCAbez906TF-R4bNNC0WaDrpQqmndIre0E-hDUbFplOOSDFJ~d~Q0nTC73oI6jmIRgAoCmPyE9s7aHdfGw18FeO7GKPvGIdUBi5kFrT2sIVogXRVgkuQ9H-CxGV5ghhS6qFmPtV~GT7ycjqK3BVmWy0oj97-nRUK5PC9fCMx0SsEs49urvR21SULHgQW8hiuk~pYnVzYaLwx-QANxQyv0NPpQAsjxWa1kPntTAXIRJEVQUbVSOVx7scvhw3JMD8lCutPHEn4hw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4'));;
     }
 }

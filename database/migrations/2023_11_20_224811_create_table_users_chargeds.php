@@ -11,32 +11,27 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('charges', function (Blueprint $table) {
+        Schema::create('table_users_chargeds', function (Blueprint $table) {
             $table->id();
-            $table->float('value', 8,2);
             $table->boolean('paid')->default(false);
-            $table->boolean('paid_owner')->default(false);
           
           
-            $table->foreignId('created_by')->constrained('users')
+            $table->foreignId('user_id')->constrained('users')
                 ->constrained()
                 ->onDelete('cascade');
                 
-                
-                
-
-
-           
+                $table->foreignId('charge_id')->constrained('charges')
+                ->constrained();
             $table->timestamps();
         });
     }
 
+   
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('charges');
+        Schema::dropIfExists('table_users_chargeds');
     }
 };
-

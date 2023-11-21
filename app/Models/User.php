@@ -52,4 +52,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function charges()
+    {
+        return $this
+            ->belongsToMany(Charge::class, 'table_users_chargeds')
+            ->withPivot('paid');
+    }
 }

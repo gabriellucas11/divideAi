@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Filament\Resources;
-
+use Filament\Forms\Components\Toggle;
 use App\Filament\Resources\ChargeResource\Pages;
 use App\Filament\Resources\ChargeResource\RelationManagers;
 use App\Models\Charge;
@@ -23,17 +23,25 @@ class ChargeResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('created_by')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('charged_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('users')
+                    ->relationship(name: 'users', titleAttribute: 'name')
+                    ->searchable()
+                ->multiple()
+                    ->preload(),
+               
                 Forms\Components\TextInput::make('value')
                     ->required()
-                    ->numeric(),
-                Forms\Components\Toggle::make('paid')
-                    ->required(),
+                    ->numeric() -> label('valor'),
+
+                    Toggle::make('paid_owner')
+                        ->onColor('success')
+                        ->visibleOn('edit')
+                        ->offColor('danger')->hidden(fn ($record) => $record?->users()->where('user_id', auth()->user()->id)->first()->exists()),
+
+                        Toggle::make('paid')
+                        ->onColor('success')
+                        ->visibleOn('edit')
+                        ->offColor('danger')->hidden(fn ($record) => auth()->user()->id == $record?->created_by),
             ]);
     }
 
@@ -41,16 +49,21 @@ class ChargeResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_by')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('charged_id')
+                Tables\Columns\TextColumn::make('chargedId.email')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('value')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('paid')
+                Tables\Columns\IconColumn::make('full_paid')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('paid_owner')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

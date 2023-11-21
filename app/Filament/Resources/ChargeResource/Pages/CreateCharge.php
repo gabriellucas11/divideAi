@@ -9,4 +9,12 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateCharge extends CreateRecord
 {
     protected static string $resource = ChargeResource::class;
+    
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        
+        $data['created_by'] = auth()->user()->id;
+
+        return $data;
+    }
 }
