@@ -28,7 +28,8 @@ class ChargeResource extends Resource
                     ->searchable()
                     ->multiple()
                     ->preload()
-                    ->visibleOn('create'),
+                    ->visibleOn('create')
+                    ->required(),
 
                 Toggle::make('paid_charge')
                     ->onColor('success')
